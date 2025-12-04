@@ -28,10 +28,17 @@ function App() {
     setResult(null);
 
     try {
+      // Create AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+
       const res = await fetch("http://localhost:5000/analyze-photo", {
         method: "POST",
         body: formData,
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (!res.ok) {
         let msg = `Server error: ${res.status}`;
@@ -47,7 +54,11 @@ function App() {
       setResult(data);
     } catch (err) {
       console.error(err);
-      alert("Something went wrong: " + err.message);
+      if (err.name === 'AbortError') {
+        alert("Request timed out. Please try again.");
+      } else {
+        alert("Failed to analyze image: " + err.message);
+      }
     } finally {
       setLoading(false);
     }
