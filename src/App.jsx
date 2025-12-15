@@ -117,15 +117,15 @@ function App() {
   }, [preview]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white p-4 md:p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white p-4 md:p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8 md:mb-12">
           <div className="inline-flex items-center gap-3 mb-4">
-            <div className="p-3 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl shadow-lg">
+            <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl shadow-lg">
               <Sparkles className="w-8 h-8" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
               PicTune
             </h1>
           </div>
@@ -140,7 +140,7 @@ function App() {
             {/* Upload Card */}
             <div className="bg-slate-800/40 backdrop-blur-lg rounded-2xl border border-slate-700/50 p-6 shadow-xl">
               <div className="flex items-center gap-2 mb-4">
-                <Upload className="w-5 h-5 text-purple-400" />
+                <Upload className="w-5 h-5 text-blue-400" />
                 <h2 className="text-xl font-semibold">Upload Photo</h2>
               </div>
 
@@ -148,8 +148,8 @@ function App() {
                 className={`block w-full rounded-xl border-2 border-dashed transition-all duration-300 cursor-pointer
                   ${preview ? 'h-64 md:h-[500px]' : 'h-48'}
                   ${isDragging 
-                    ? "border-purple-500 bg-purple-500/10 scale-[1.02]" 
-                    : "border-slate-600 hover:border-purple-400 hover:bg-slate-800/30"
+                    ? "border-blue-500 bg-blue-500/10 scale-[1.02]" 
+                    : "border-slate-600 hover:border-blue-400 hover:bg-slate-800/30"
                   }`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
@@ -190,7 +190,7 @@ function App() {
               {/* Language Filter */}
               <div className="mt-6">
                 <div className="flex items-center gap-2 mb-3">
-                  <Globe className="w-5 h-5 text-purple-400" />
+                  <Globe className="w-5 h-5 text-blue-400" />
                   <h3 className="font-semibold text-slate-200">Preferred Language</h3>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
@@ -200,8 +200,8 @@ function App() {
                       onClick={() => setLanguageFilter(option.id)}
                       className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all
                         ${languageFilter === option.id
-                          ? "bg-gradient-to-r from-purple-500 to-pink-500 border-transparent shadow-lg"
-                          : "bg-slate-800/50 border-slate-600 hover:border-purple-400/50 hover:bg-slate-800/80"
+                          ? "bg-gradient-to-r from-blue-500 to-cyan-500 border-transparent shadow-lg"
+                          : "bg-slate-800/50 border-slate-600 hover:border-blue-400/50 hover:bg-slate-800/80"
                         }`}
                     >
                       <div className="mb-1">{option.icon}</div>
@@ -218,7 +218,7 @@ function App() {
                 className={`w-full mt-6 py-4 rounded-xl font-semibold text-lg transition-all duration-300
                   ${!photo || loading
                     ? "bg-slate-700/50 cursor-not-allowed"
-                    : "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 hover:shadow-lg hover:shadow-purple-500/25 active:scale-[0.98]"
+                    : "bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 hover:shadow-lg hover:shadow-blue-500/25 active:scale-[0.98]"
                   }`}
               >
                 {loading ? (
@@ -275,16 +275,16 @@ function App() {
                       {filteredSongs.map((song, idx) => (
                         <div
                           key={idx}
-                          className="group bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 rounded-xl p-4 transition-all hover:border-purple-400/30 hover:shadow-md"
+                          className="group bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 rounded-xl p-4 transition-all hover:border-blue-400/30 hover:shadow-md"
                         >
                           <div className="flex items-center gap-4">
-                            <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                            <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
                               <Music className="w-6 h-6 text-white" />
                             </div>
                             <div className="flex-grow">
                               <div className="flex justify-between items-start">
                                 <div>
-                                  <h4 className="font-bold text-white group-hover:text-purple-300 transition-colors">
+                                  <h4 className="font-bold text-white group-hover:text-blue-300 transition-colors">
                                     {song.title}
                                   </h4>
                                   <p className="text-sm text-slate-400 mt-1">
@@ -298,7 +298,7 @@ function App() {
                               {song.genre && (
                                 <div className="mt-3 flex items-center gap-2">
                                   <span className="text-xs text-slate-500">Genre:</span>
-                                  <span className="px-2 py-1 rounded text-xs font-medium bg-purple-500/20 text-purple-300">
+                                  <span className="px-2 py-1 rounded text-xs font-medium bg-blue-500/20 text-blue-300">
                                     {song.genre}
                                   </span>
                                 </div>
@@ -317,8 +317,8 @@ function App() {
             {!result && !loading && (
               <div className="bg-slate-800/40 backdrop-blur-lg rounded-2xl border border-slate-700/50 p-8 text-center h-full flex items-center justify-center min-h-[300px]">
                 <div className="max-w-sm mx-auto">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center">
-                    <Music className="w-8 h-8 text-purple-400" />
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-500/20 to-cyan-500/20 flex items-center justify-center">
+                    <Music className="w-8 h-8 text-blue-400" />
                   </div>
                   <h3 className="text-xl font-semibold mb-2">No Analysis Yet</h3>
                   <p className="text-slate-400">
