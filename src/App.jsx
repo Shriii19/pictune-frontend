@@ -1,4 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { 
+  Upload, 
+  Music, 
+  Sparkles, 
+  Globe, 
+  Loader2,
+  Image as ImageIcon,
+  Palette
+} from "lucide-react";
 
 function App() {
   const [languageFilter, setLanguageFilter] = useState("all");
@@ -6,13 +15,37 @@ function App() {
   const [preview, setPreview] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith("image/")) {
+      handleFile(file);
+    }
+  };
+
+  const handleFile = (file) => {
     setPhoto(file);
     if (file) {
       setPreview(URL.createObjectURL(file));
     }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    handleFile(file);
   };
 
   const handleSubmit = async () => {
@@ -28,9 +61,8 @@ function App() {
     setResult(null);
 
     try {
-      // Create AbortController for timeout
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
 
       const res = await fetch("http://localhost:5000/analyze-photo", {
         method: "POST",
@@ -64,159 +96,244 @@ function App() {
     }
   };
 
-  // Filter songs based on selected language
   const filteredSongs =
     result?.songs?.filter((song) => {
       if (languageFilter === "all") return true;
       return song.language?.toLowerCase() === languageFilter;
     }) || [];
 
+  const languageOptions = [
+    { id: "all", label: "All Languages", icon: <Globe className="w-4 h-4" /> },
+    { id: "hindi", label: "Hindi", icon: <span className="text-lg">🇮🇳</span> },
+    { id: "english", label: "English", icon: <span className="text-lg">🇺🇸</span> },
+  ];
+
+  useEffect(() => {
+    return () => {
+      if (preview) {
+        URL.revokeObjectURL(preview);
+      }
+    };
+  }, [preview]);
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-xl bg-slate-900/70 border border-slate-800 rounded-2xl shadow-xl p-6 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white p-4 md:p-6">
+      <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold tracking-tight">
-            PicTune <span className="text-indigo-400">🎵📸</span>
-          </h1>
-          <p className="text-slate-400 mt-2 text-sm">
-            Upload a photo and let AI guess the mood.
+        <div className="text-center mb-8 md:mb-12">
+          <div className="inline-flex items-center gap-3 mb-4">
+            <div className="p-3 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl shadow-lg">
+              <Sparkles className="w-8 h-8" />
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              PicTune
+            </h1>
+          </div>
+          <p className="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto">
+            Upload a photo and let AI analyze the mood to suggest perfect songs
           </p>
         </div>
 
-        {/* Upload section */}
-        <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-slate-700 rounded-xl cursor-pointer bg-slate-900/60 hover:border-indigo-400 hover:bg-slate-900 transition">
-          <div className="flex flex-col items-center justify-center pt-4 pb-5">
-            <p className="mb-2 text-sm text-slate-300">
-              <span className="font-semibold">Click to upload</span> or drag & drop
-            </p>
-            <p className="text-xs text-slate-500">PNG, JPG or JPEG</p>
-          </div>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="hidden"
-          />
-        </label>
+        <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+          {/* Left Column - Upload & Controls */}
+          <div className="space-y-6">
+            {/* Upload Card */}
+            <div className="bg-slate-800/40 backdrop-blur-lg rounded-2xl border border-slate-700/50 p-6 shadow-xl">
+              <div className="flex items-center gap-2 mb-4">
+                <Upload className="w-5 h-5 text-purple-400" />
+                <h2 className="text-xl font-semibold">Upload Photo</h2>
+              </div>
 
-        {/* Preview */}
-        {preview && (
-          <div className="mt-5">
-            <h3 className="text-sm font-medium text-slate-300 mb-2">Preview</h3>
-            <div className="overflow-hidden rounded-xl border border-slate-800">
-              <img
-                src={preview}
-                alt="preview"
-                className="w-full max-h-64 object-cover"
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Language Filter */}
-        <div className="mt-5">
-          <p className="text-xs font-medium text-slate-400 mb-2">
-            Preferred language
-          </p>
-          <div className="flex gap-2 text-xs">
-            <button
-              onClick={() => setLanguageFilter("all")}
-              className={`flex-1 px-3 py-2 rounded-lg border ${
-                languageFilter === "all"
-                  ? "bg-indigo-500 border-indigo-400 text-white"
-                  : "bg-slate-900 border-slate-700 text-slate-300"
-              }`}
-            >
-              Both
-            </button>
-            <button
-              onClick={() => setLanguageFilter("hindi")}
-              className={`flex-1 px-3 py-2 rounded-lg border ${
-                languageFilter === "hindi"
-                  ? "bg-indigo-500 border-indigo-400 text-white"
-                  : "bg-slate-900 border-slate-700 text-slate-300"
-              }`}
-            >
-              Hindi
-            </button>
-            <button
-              onClick={() => setLanguageFilter("english")}
-              className={`flex-1 px-3 py-2 rounded-lg border ${
-                languageFilter === "english"
-                  ? "bg-indigo-500 border-indigo-400 text-white"
-                  : "bg-slate-900 border-slate-700 text-slate-300"
-              }`}
-            >
-              English
-            </button>
-          </div>
-        </div>
-
-        {/* Button */}
-        <button
-          onClick={handleSubmit}
-          className="mt-6 w-full py-3 rounded-xl text-sm font-semibold bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-400 hover:to-blue-400 disabled:opacity-60 disabled:cursor-not-allowed transition"
-          disabled={loading}
-        >
-          {loading ? "Analyzing photo..." : "Detect Mood"}
-        </button>
-
-        {/* Result */}
-        {result && (
-          <div className="mt-6 bg-slate-900/70 border border-slate-800 rounded-xl p-4">
-            <h3 className="text-sm font-semibold text-slate-200">
-              Detected Mood:
-            </h3>
-
-            <p className="mt-1 text-lg font-bold text-indigo-300">
-              {result.mood}
-            </p>
-
-            {/* Labels */}
-            <h4 className="mt-4 text-xs font-semibold text-slate-400 uppercase tracking-wide">
-              Labels from AI
-            </h4>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {result.labels.map((label, idx) => (
-                <span
-                  key={idx}
-                  className="px-3 py-1 rounded-full text-xs bg-slate-800 text-slate-200 border border-slate-700"
-                >
-                  {label}
-                </span>
-              ))}
-            </div>
-
-            {/* Songs */}
-            <h4 className="mt-5 text-xs font-semibold text-slate-400 uppercase tracking-wide">
-              Suggested Songs
-            </h4>
-            {filteredSongs.length === 0 ? (
-              <p className="mt-2 text-xs text-slate-500">
-                No songs for this language. Try &quot;Both&quot;.
-              </p>
-            ) : (
-              <ul className="mt-2 space-y-2">
-                {filteredSongs.map((song, idx) => (
-                  <li
-                    key={idx}
-                    className="flex justify-between items-center bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm"
-                  >
-                    <div>
-                      <p className="font-semibold text-slate-100">
-                        {song.title}
-                      </p>
-                      <p className="text-xs text-slate-400">
-                        {song.artist} • {song.language}
-                      </p>
+              <label
+                className={`block w-full rounded-xl border-2 border-dashed transition-all duration-300 cursor-pointer
+                  ${preview ? 'h-64 md:h-[500px]' : 'h-48'}
+                  ${isDragging 
+                    ? "border-purple-500 bg-purple-500/10 scale-[1.02]" 
+                    : "border-slate-600 hover:border-purple-400 hover:bg-slate-800/30"
+                  }`}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                <div className="flex flex-col items-center justify-center h-full p-6">
+                  {preview ? (
+                    <div className="relative w-full h-full">
+                      <img
+                        src={preview}
+                        alt="Preview"
+                        className="w-full h-full object-contain rounded-lg"
+                      />
+                      <div className="absolute inset-0 bg-black/40 rounded-lg flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                        <Upload className="w-8 h-8 text-white" />
+                      </div>
                     </div>
-                  </li>
-                ))}
-              </ul>
+                  ) : (
+                    <>
+                      <Upload className="w-12 h-12 text-slate-400 mb-4" />
+                      <p className="text-center text-slate-300 font-medium">
+                        Drag & drop or click to upload
+                      </p>
+                      <p className="text-center text-slate-500 text-sm mt-2">
+                        Supports JPG, PNG, WEBP
+                      </p>
+                    </>
+                  )}
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+              </label>
+
+              {/* Language Filter */}
+              <div className="mt-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <Globe className="w-5 h-5 text-purple-400" />
+                  <h3 className="font-semibold text-slate-200">Preferred Language</h3>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {languageOptions.map((option) => (
+                    <button
+                      key={option.id}
+                      onClick={() => setLanguageFilter(option.id)}
+                      className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all
+                        ${languageFilter === option.id
+                          ? "bg-gradient-to-r from-purple-500 to-pink-500 border-transparent shadow-lg"
+                          : "bg-slate-800/50 border-slate-600 hover:border-purple-400/50 hover:bg-slate-800/80"
+                        }`}
+                    >
+                      <div className="mb-1">{option.icon}</div>
+                      <span className="text-xs font-medium">{option.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Analyze Button */}
+              <button
+                onClick={handleSubmit}
+                disabled={loading || !photo}
+                className={`w-full mt-6 py-4 rounded-xl font-semibold text-lg transition-all duration-300
+                  ${!photo || loading
+                    ? "bg-slate-700/50 cursor-not-allowed"
+                    : "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 hover:shadow-lg hover:shadow-purple-500/25 active:scale-[0.98]"
+                  }`}
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Analyzing Mood...
+                  </span>
+                ) : (
+                  <span className="flex items-center justify-center gap-2">
+                    <Palette className="w-5 h-5" />
+                    Detect Mood & Suggest Songs
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Right Column - Results */}
+          <div className="space-y-6">
+            {/* Mood Result Card */}
+            {result && (
+              <>
+                <div className="bg-slate-800/40 backdrop-blur-lg rounded-2xl border border-slate-700/50 p-6 shadow-xl">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Sparkles className="w-5 h-5 text-yellow-400" />
+                    <h2 className="text-xl font-semibold">Detected Mood</h2>
+                  </div>
+                  
+                  <div className="bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-xl p-6 border border-slate-700/50">
+                    <p className="text-3xl md:text-4xl font-bold text-center bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent">
+                      {result.mood}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Songs Card */}
+                <div className="bg-slate-800/40 backdrop-blur-lg rounded-2xl border border-slate-700/50 p-6 shadow-xl">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Music className="w-5 h-5 text-green-400" />
+                    <h2 className="text-xl font-semibold">Recommended Songs</h2>
+                    <span className="ml-auto px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-300 border border-green-400/30">
+                      {filteredSongs.length} songs
+                    </span>
+                  </div>
+
+                  {filteredSongs.length === 0 ? (
+                    <div className="text-center py-8">
+                      <Music className="w-12 h-12 text-slate-600 mx-auto mb-3" />
+                      <p className="text-slate-400">No songs found for this language</p>
+                      <p className="text-sm text-slate-500 mt-1">Try selecting "All Languages"</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+                      {filteredSongs.map((song, idx) => (
+                        <div
+                          key={idx}
+                          className="group bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 rounded-xl p-4 transition-all hover:border-purple-400/30 hover:shadow-md"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                              <Music className="w-6 h-6 text-white" />
+                            </div>
+                            <div className="flex-grow">
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <h4 className="font-bold text-white group-hover:text-purple-300 transition-colors">
+                                    {song.title}
+                                  </h4>
+                                  <p className="text-sm text-slate-400 mt-1">
+                                    {song.artist}
+                                  </p>
+                                </div>
+                                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-slate-700/70 text-slate-300">
+                                  {song.language}
+                                </span>
+                              </div>
+                              {song.genre && (
+                                <div className="mt-3 flex items-center gap-2">
+                                  <span className="text-xs text-slate-500">Genre:</span>
+                                  <span className="px-2 py-1 rounded text-xs font-medium bg-purple-500/20 text-purple-300">
+                                    {song.genre}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+
+            {/* Empty State */}
+            {!result && !loading && (
+              <div className="bg-slate-800/40 backdrop-blur-lg rounded-2xl border border-slate-700/50 p-8 text-center h-full flex items-center justify-center min-h-[300px]">
+                <div className="max-w-sm mx-auto">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center">
+                    <Music className="w-8 h-8 text-purple-400" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">No Analysis Yet</h3>
+                  <p className="text-slate-400">
+                    Upload a photo and click "Detect Mood" to see song recommendations based on your image's mood
+                  </p>
+                </div>
+              </div>
             )}
           </div>
-        )}
+        </div>
+
+        {/* Footer */}
+        <div className="mt-8 text-center text-slate-500 text-sm">
+          <p>Powered by AI • Upload any image to discover matching music</p>
+        </div>
       </div>
     </div>
   );
