@@ -295,6 +295,43 @@ function App() {
                                   {song.language}
                                 </span>
                               </div>
+                              
+                              {/* Audio Features */}
+                              {song.audioFeatures && (
+                                <div className="mt-3 grid grid-cols-2 gap-2">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs text-slate-500">Tempo:</span>
+                                    <span className="text-xs font-medium text-blue-300">
+                                      {Math.round(song.audioFeatures.tempo)} BPM
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs text-slate-500">Energy:</span>
+                                    <div className="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                      <div 
+                                        className="h-full bg-gradient-to-r from-green-500 to-emerald-400"
+                                        style={{ width: `${song.audioFeatures.energy * 100}%` }}
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs text-slate-500">Mood:</span>
+                                    <div className="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                      <div 
+                                        className="h-full bg-gradient-to-r from-yellow-500 to-orange-400"
+                                        style={{ width: `${song.audioFeatures.valence * 100}%` }}
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs text-slate-500">Match:</span>
+                                    <span className="text-xs font-bold text-green-400">
+                                      {Math.round(song.audioFeatures.match_score * 100)}%
+                                    </span>
+                                  </div>
+                                </div>
+                              )}
+                              
                               {song.genre && (
                                 <div className="mt-3 flex items-center gap-2">
                                   <span className="text-xs text-slate-500">Genre:</span>
