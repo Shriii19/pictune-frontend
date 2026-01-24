@@ -65,7 +65,7 @@ function App() {
       const timeoutId = setTimeout(() => controller.abort(), 15000);
 
       const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
-      const res = await fetch(`${apiUrl}/analyze-photo`, {
+      const res = await fetch(`${apiUrl}/api/analyze-photo`, {
         method: "POST",
         body: formData,
         signal: controller.signal,
