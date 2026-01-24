@@ -37,6 +37,18 @@ cd pictune-frontend
 npm install
 ```
 
+3. Configure environment variables:
+
+Create `.env.development` for local development:
+```env
+VITE_API_URL=http://localhost:5000
+```
+
+For production deployment, configure the environment variable in your hosting platform (Vercel, Netlify, etc.):
+```env
+VITE_API_URL=https://your-backend-url.com
+```
+
 ## Development
 
 Start the development server:
@@ -57,6 +69,31 @@ Preview the production build:
 ```bash
 npm run preview
 ```
+
+## Deployment
+
+### Vercel (Recommended)
+
+1. Push your code to GitHub
+2. Import your repository in Vercel
+3. Configure the environment variable:
+   - Add `VITE_API_URL` with your backend URL
+4. Deploy!
+
+The `vercel.json` file is already configured for optimal deployment.
+
+### Other Platforms
+
+The app can be deployed to any static hosting platform:
+- Netlify
+- GitHub Pages
+- AWS S3 + CloudFront
+- Firebase Hosting
+
+Make sure to:
+1. Set the build command to `npm run build`
+2. Set the output directory to `dist`
+3. Configure the `VITE_API_URL` environment variable
 
 ## Linting
 
