@@ -5,7 +5,6 @@ import {
   Sparkles, 
   Globe, 
   Loader2,
-  Image as ImageIcon,
   Palette
 } from "lucide-react";
 
@@ -62,7 +61,7 @@ function App() {
 
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
 
       const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
       const res = await fetch(`${apiUrl}/analyze-photo`, {
@@ -119,7 +118,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white p-4 md:p-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8 md:mb-12">
           <div className="inline-flex items-center gap-3 mb-4">
@@ -128,7 +127,7 @@ function App() {
               alt="PicTune Logo" 
               className="w-16 h-16 md:w-24 md:h-24 object-contain drop-shadow-lg"
             />
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
               PicTune
             </h1>
           </div>
@@ -137,7 +136,7 @@ function App() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+        <div className="grid lg:grid-cols-2 gap-6 md:gap-8">
           {/* Left Column - Upload & Controls */}
           <div className="space-y-6">
             {/* Upload Card */}
@@ -149,7 +148,7 @@ function App() {
 
               <label
                 className={`block w-full rounded-xl border-2 border-dashed transition-all duration-300 cursor-pointer
-                  ${preview ? 'h-64 md:h-[500px]' : 'h-48'}
+                  ${preview ? 'h-64 md:h-80' : 'h-48'}
                   ${isDragging 
                     ? "border-blue-500 bg-blue-500/10 scale-[1.02]" 
                     : "border-slate-600 hover:border-blue-400 hover:bg-slate-800/30"
@@ -274,7 +273,7 @@ function App() {
                       <p className="text-sm text-slate-500 mt-1">Try selecting "All Languages"</p>
                     </div>
                   ) : (
-                    <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+                    <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
                       {filteredSongs.map((song, idx) => (
                         <div
                           key={idx}
