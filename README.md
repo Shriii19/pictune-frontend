@@ -142,3 +142,6 @@ This project is licensed under the MIT License.
 ## Contact
 
 For questions or support, please open an issue on GitHub.
+
+
+<!-- Build fix: Updated Vercel build command configuration - 2026-02-02 -->
