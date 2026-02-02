@@ -1,4 +1,4 @@
-{
+ {
   "name": "pictune-frontend",
   "private": true,
   "version": "0.0.0",
@@ -10,7 +10,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postinstall": "chmod +x node_modules/.bin/vite || true"
   },
   "dependencies": {
     "react": "^18.3.1",
