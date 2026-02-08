@@ -120,8 +120,8 @@ function App() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white p-4 md:p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8 md:mb-12">
-          <div className="inline-flex items-center gap-3 mb-4">
+        <div className="text-center mb-8 md:mb-12 animate-[fadeInDown_0.5s_ease-out]">
+          <div className="inline-flex items-center gap-3 mb-4 transition-transform duration-300 hover:scale-105">
             <img 
               src="/logo.png" 
               alt="PicTune Logo" 
@@ -138,9 +138,9 @@ function App() {
 
         <div className="grid lg:grid-cols-2 gap-6 md:gap-8">
           {/* Left Column - Upload & Controls */}
-          <div className="space-y-6">
+          <div className="space-y-6 animate-[fadeInUp_0.6s_ease-out]">
             {/* Upload Card */}
-            <div className="bg-slate-800/40 backdrop-blur-lg rounded-2xl border border-slate-700/50 p-6 shadow-xl">
+            <div className="bg-slate-800/40 backdrop-blur-lg rounded-2xl border border-slate-700/50 p-6 shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/10 hover:border-slate-600/70">
               <div className="flex items-center gap-2 mb-4">
                 <Upload className="w-5 h-5 text-blue-400" />
                 <h2 className="text-xl font-semibold">Upload Photo</h2>
@@ -239,7 +239,7 @@ function App() {
           </div>
 
           {/* Right Column - Results */}
-          <div className="space-y-6">
+          <div className="space-y-6 animate-[fadeInUp_0.6s_ease-out_0.2s] animate-fill-both">
             {/* Mood Result Card */}
             {result && (
               <>
