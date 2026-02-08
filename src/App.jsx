@@ -147,16 +147,25 @@ function App() {
               </div>
 
               <label
-                className={`block w-full rounded-xl border-2 border-dashed transition-all duration-300 cursor-pointer
+                className={`block w-full rounded-xl border-2 border-dashed transition-all duration-300 cursor-pointer relative
                   ${preview ? 'h-64 md:h-80' : 'h-48'}
                   ${isDragging 
                     ? "border-blue-500 bg-blue-500/10 scale-[1.02]" 
                     : "border-slate-600 hover:border-blue-400 hover:bg-slate-800/30"
-                  }`}
+                  }
+                  ${loading ? "pointer-events-none opacity-60" : ""}`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
               >
+                {loading && (
+                  <div className="absolute inset-0 bg-slate-900/80 rounded-xl flex items-center justify-center z-10">
+                    <div className="text-center">
+                      <Loader2 className="w-10 h-10 text-blue-400 animate-spin mx-auto mb-2" />
+                      <p className="text-sm text-slate-300">Analyzing your photo...</p>
+                    </div>
+                  </div>
+                )}
                 <div className="flex flex-col items-center justify-center h-full p-6">
                   {preview ? (
                     <div className="relative w-full h-full">
@@ -241,7 +250,45 @@ function App() {
           {/* Right Column - Results */}
           <div className="space-y-6 animate-[fadeInUp_0.6s_ease-out_0.2s] animate-fill-both">
             {/* Mood Result Card */}
-            {result && (
+            {loading && (
+              <>
+                {/* Skeleton for Mood Card */}
+                <div className="bg-slate-800/40 backdrop-blur-lg rounded-2xl border border-slate-700/50 p-6 shadow-xl">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-5 h-5 rounded bg-slate-700 animate-pulse"></div>
+                    <div className="h-5 w-32 bg-slate-700 rounded animate-pulse"></div>
+                  </div>
+                  
+                  <div className="bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-xl p-6 border border-slate-700/50">
+                    <div className="h-10 w-40 mx-auto bg-slate-700 rounded animate-pulse"></div>
+                  </div>
+                </div>
+
+                {/* Skeleton for Songs Card */}
+                <div className="bg-slate-800/40 backdrop-blur-lg rounded-2xl border border-slate-700/50 p-6 shadow-xl">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-5 h-5 rounded bg-slate-700 animate-pulse"></div>
+                    <div className="h-5 w-48 bg-slate-700 rounded animate-pulse"></div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <div key={i} className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-lg bg-slate-700 animate-pulse"></div>
+                          <div className="flex-grow space-y-2">
+                            <div className="h-4 w-3/4 bg-slate-700 rounded animate-pulse"></div>
+                            <div className="h-3 w-1/2 bg-slate-700 rounded animate-pulse"></div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
+            
+            {result && !loading && (
               <>
                 <div className="bg-slate-800/40 backdrop-blur-lg rounded-2xl border border-slate-700/50 p-6 shadow-xl">
                   <div className="flex items-center gap-2 mb-4">
