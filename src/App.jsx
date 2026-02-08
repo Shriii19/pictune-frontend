@@ -5,7 +5,10 @@ import {
   Sparkles, 
   Globe, 
   Loader2,
-  Palette
+  Palette,
+  X,
+  AlertCircle,
+  RefreshCw
 } from "lucide-react";
 
 function App() {
@@ -15,6 +18,7 @@ function App() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -37,9 +41,18 @@ function App() {
 
   const handleFile = (file) => {
     setPhoto(file);
+    setError(null);
     if (file) {
       setPreview(URL.createObjectURL(file));
     }
+  };
+
+  const handleReset = () => {
+    setPhoto(null);
+    setPreview("");
+    setResult(null);
+    setError(null);
+    setLanguageFilter("all");
   };
 
   const handleFileChange = (e) => {
@@ -49,7 +62,7 @@ function App() {
 
   const handleSubmit = async () => {
     if (!photo) {
-      alert("Please select a photo first");
+      setError("Please select a photo first");
       return;
     }
 
@@ -58,6 +71,7 @@ function App() {
 
     setLoading(true);
     setResult(null);
+    setError(null);
 
     try {
       const controller = new AbortController();
@@ -78,7 +92,7 @@ function App() {
           const errData = await res.json();
           if (errData?.error) msg = errData.error;
         } catch (_) {}
-        alert(msg);
+        setError(msg);
         return;
       }
 
@@ -87,9 +101,9 @@ function App() {
     } catch (err) {
       console.error(err);
       if (err.name === 'AbortError') {
-        alert("Request timed out. Please try again.");
+        setError("Request timed out. Please try again.");
       } else {
-        alert("Failed to analyze image: " + err.message);
+        setError("Failed to analyze image: " + err.message);
       }
     } finally {
       setLoading(false);
@@ -177,6 +191,16 @@ function App() {
                       <div className="absolute inset-0 bg-black/40 rounded-lg flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
                         <Upload className="w-8 h-8 text-white" />
                       </div>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleReset();
+                        }}
+                        className="absolute top-2 right-2 p-2 bg-red-500 hover:bg-red-600 rounded-full transition-colors"
+                        title="Remove photo"
+                      >
+                        <X className="w-4 h-4 text-white" />
+                      </button>
                     </div>
                   ) : (
                     <>
@@ -244,6 +268,33 @@ function App() {
                   </span>
                 )}
               </button>
+
+              {/* Error Display */}
+              {error && (
+                <div className="mt-4 p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-start gap-3 animate-[fadeInUp_0.3s_ease-out]">
+                  <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                  <div className="flex-grow">
+                    <p className="text-red-300 text-sm">{error}</p>
+                  </div>
+                  <button
+                    onClick={() => setError(null)}
+                    className="text-red-400 hover:text-red-300 transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+
+              {/* Reset Button */}
+              {(preview || result) && !loading && (
+                <button
+                  onClick={handleReset}
+                  className="w-full mt-3 py-3 rounded-xl font-semibold text-sm bg-slate-700/50 hover:bg-slate-700/70 border border-slate-600 transition-all duration-300 flex items-center justify-center gap-2"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  Start Over
+                </button>
+              )}
             </div>
           </div>
 
