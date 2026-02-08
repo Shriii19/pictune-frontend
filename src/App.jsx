@@ -139,7 +139,7 @@ function App() {
             <img 
               src="/logo.png" 
               alt="PicTune Logo" 
-              className="w-16 h-16 md:w-24 md:h-24 object-contain drop-shadow-lg"
+              className="w-16 h-16 md:w-24 md:h-24 object-contain drop-shadow-lg hover:drop-shadow-2xl hover:rotate-6 transition-all duration-300"
             />
             <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
               PicTune
@@ -233,10 +233,10 @@ function App() {
                     <button
                       key={option.id}
                       onClick={() => setLanguageFilter(option.id)}
-                      className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all
+                      className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all duration-300 transform
                         ${languageFilter === option.id
-                          ? "bg-gradient-to-r from-blue-500 to-cyan-500 border-transparent shadow-lg"
-                          : "bg-slate-800/50 border-slate-600 hover:border-blue-400/50 hover:bg-slate-800/80"
+                          ? "bg-gradient-to-r from-blue-500 to-cyan-500 border-transparent shadow-lg scale-105"
+                          : "bg-slate-800/50 border-slate-600 hover:border-blue-400/50 hover:bg-slate-800/80 hover:scale-105 active:scale-95"
                         }`}
                     >
                       <div className="mb-1">{option.icon}</div>
@@ -341,14 +341,14 @@ function App() {
             
             {result && !loading && (
               <>
-                <div className="bg-slate-800/40 backdrop-blur-lg rounded-2xl border border-slate-700/50 p-6 shadow-xl">
+                <div className="bg-slate-800/40 backdrop-blur-lg rounded-2xl border border-slate-700/50 p-6 shadow-xl hover:shadow-2xl hover:shadow-yellow-500/10 transition-all duration-300">
                   <div className="flex items-center gap-2 mb-4">
-                    <Sparkles className="w-5 h-5 text-yellow-400" />
+                    <Sparkles className="w-5 h-5 text-yellow-400 animate-pulse" />
                     <h2 className="text-xl font-semibold">Detected Mood</h2>
                   </div>
                   
-                  <div className="bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-xl p-6 border border-slate-700/50">
-                    <p className="text-3xl md:text-4xl font-bold text-center bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent">
+                  <div className="bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-xl p-6 border border-slate-700/50 hover:border-yellow-400/30 transition-all duration-300">
+                    <p className="text-3xl md:text-4xl font-bold text-center bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent hover:scale-105 transition-transform duration-300">
                       {result.mood}
                     </p>
                   </div>
@@ -375,11 +375,11 @@ function App() {
                       {filteredSongs.map((song, idx) => (
                         <div
                           key={idx}
-                          className="group bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 rounded-xl p-4 transition-all hover:border-blue-400/30 hover:shadow-md"
+                          className="group bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 rounded-xl p-4 transition-all duration-300 hover:border-blue-400/30 hover:shadow-md hover:shadow-blue-500/10 hover:scale-[1.02] cursor-pointer"
                         >
                           <div className="flex items-center gap-4">
-                            <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
-                              <Music className="w-6 h-6 text-white" />
+                            <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                              <Music className="w-6 h-6 text-white group-hover:animate-pulse" />
                             </div>
                             <div className="flex-grow">
                               <div className="flex justify-between items-start">
